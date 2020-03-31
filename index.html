@@ -1,0 +1,295 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+
+  <title>Market Timing vs Regular Investing</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="range-slider-master/css/rSlider.min.css">
+
+</head>
+
+<body>
+
+    <h1>Investing Scenarios</h1>
+
+    <div id="loadingImageDiv">
+      <img src="https://themeasureofaplan.com/wp-content/uploads/2019/10/copper-loader.gif" alt="Loading animation -- need inputs">
+      <p id="loadingPara">Importing market prices...</p>
+      
+      &nbsp;
+    </div>
+
+    <div id="mainContainerDiv">
+
+      <h2>Assumptions</h2>
+
+      <div id="inputDiv">
+        <table id="inputTable">
+          <tr>
+            <th colspan="3">Your Current & Future Savings</th>
+          </tr>  
+          <tr>
+              <td>Initial Contribution</td>
+              <td class="middleCol">$</td>
+              <td><input type="number" id="initialContributionInput" class="userInput input-number–noSpinners" step=0.01 min=0 placeholder="5000"></td>
+          </tr>
+
+          <tr>
+              <td>Monthly Contribution</td>
+              <td class="middleCol">$</td>
+              <td><input type="number" id="monthlyContributionInput" class="userInput input-number–noSpinners" step=0.01 min=0 placeholder="250"></td>
+          </tr>
+  
+        </table>
+      </div>
+              
+      <div id="marketTimingInputDiv">
+        <table id="marketTimingInputTable">
+          <tr>
+            <th colspan="3">Market Timing Strategy</th>
+          </tr>
+          <tr>
+              <td>Only invest when the market is down by <span class="orangeText">x%+</span> from the current all-time high</td>
+              <td class="middleCol">%</td>
+              <td><input type="number" id="gapToATHInput" class="userInput input-number–noSpinners orangeText" step=0.01 min=0 value="20" placeholder="20"></td>
+          </tr>
+        </table>
+      </div>
+
+      <div id="yearRangeSliderDiv">
+        <table id="yearRangeSliderTable">
+          <tr>
+            <th>Time Period</th>
+          </tr>
+
+          <tr>
+            <td id="yearRangeSliderCell"><input type="text" id="yearRangeSlider"/></td>
+          </tr>
+        </table>
+      </div>
+
+      &nbsp;
+
+      <button onclick="toggleAdvancedOptions()" id="advancedInputButton">+ Advanced Options</button>
+
+
+      <div id="advancedInputDiv">
+
+        &nbsp;
+  
+        <table id="advancedInputTable">
+          <tr>
+            <th colspan="3">Other Assumptions</th>
+          </tr>
+          <tr>
+                <td>Interest rate on cash</td>
+                <td class="middleCol">%</td>
+                <td><input type="number" id="cashInterestRateInput" class="userInput input-number–noSpinners" step=0.01 min=0 value="2" placeholder="2"></td>
+            </tr>
+  
+            <tr>
+                <td>Trading transaction fee</td>
+                <td class="middleCol">$ per trade</td>
+                <td><input type="number" id="tradingTransactionFeeInput" class="userInput input-number–noSpinners" step=0.01 min=0 value="0" placeholder="0"></td>
+            </tr>
+        </table>
+      </div>
+  
+      <div id="refreshButtonDiv">
+        &nbsp;
+        <button onclick="refreshAnalysis()" id="refreshAnalysisButton">Go!</button>
+        
+        <!---
+        <div id="enterAssumptionsText">
+          <p>Please enter your assumptions above.</p>
+          <p>Note that you need to enter a value greater than zero for either the initial contribution or the monthly contribution amount.</p>
+          <p>When ready, click the "Go" button!</p>
+        </div>
+        -->
+
+      </div>
+
+      <div id="outputContainerDiv">
+        
+
+    
+        <h2>Results</h2>
+
+        <div class="outputTextContainerDiv">
+          <div id="outputTextDiv">
+              <p id="outputPara1"></p>
+          </div>
+        </div>
+    
+        <div id="portfolioValueChartDiv" tabindex="0">
+            <canvas id="portfolioValueChart"></canvas>
+        </div>
+        
+        <div id="customURLContainer">
+
+
+            <div class="customURLDiv">
+                <button id="generateURLButton">Save this scenario</button>
+            </div>
+
+            <div class="customURLDiv">
+                <div id="customURLOutput">Click button to save / share your custom scenario</div>
+            </div>
+        </div>
+    
+        <div id="portfolioValueOutputTableDiv">
+          <table id="portfolioValueOutputTable">
+    
+            <tr>
+                <th>Investing Strategy</th>
+                <th id="finalPortfolioDateCell">Final Portfolio Value</th>
+                <th id="averageAnnualReturnCell">Average Annual Return</th>
+            </tr>
+    
+            <tr>
+                <td>Invest whenever you have cash</td>
+                <td id="P1EndValueCell"></td>
+                <td id="P1ReturnCell"></td>
+            </tr>
+    
+            <tr>
+                <td id="P2LabelCell">Only invest when the market is down by x%+ from the current all-time high</td>
+                <td id="P2EndValueCell"></td>
+                <td id="P2ReturnCell"></td>
+            </tr>
+    
+            <tr>
+                <td>All cash strategy (incl. interest)</td>
+                <td id="P3EndValueCell"></td>
+                <td id="P3ReturnCell"></td>
+            </tr>
+    
+          </table>
+        </div>
+
+        <div id="netWorthDifferenceChartDiv">
+          <canvas id="netWorthDifferenceChart"></canvas>  
+        </div>
+    
+        &nbsp;
+            
+        <h2>Market Timing Strategy - Cash vs Stock Breakdown</h2>
+    
+        <div id="P2CashStockChartDiv" tabindex="0">
+          <canvas id="P2CashStockChart"></canvas>
+        </div>
+    
+        <div id="P2CashStockWeightChartDiv" tabindex="0">
+          <canvas id="P2CashStockWeightChart"></canvas>
+        </div>
+
+        &nbsp;
+
+        <h2>Underlying Index Performance</h2>
+    
+        <div id="VFINXPriceChartDiv" tabindex="0">
+          <canvas id="VFINXPriceChart"></canvas>
+        </div>
+    
+        <div id="gapToATHChartDiv" tabindex="0">
+          <canvas id="gapToATHChart"></canvas>
+        </div>
+    
+        <!--
+        <div id="gapToATHTableDiv">
+          <table id="gapToATHTable">
+              <tr>
+                <th></th>
+                <th># of Trading Days</th>
+                <th>% of Total Days</th>
+              </tr>
+    
+              <tr>
+                <td>Days at the current all-time high (ATH)</td>
+                <td id="daysAtATHNumCell"></td>
+                <td id="daysAtATHPctCell"></td>
+              </tr>
+    
+              <tr>
+                <td>Within 1% of ATH</td>
+                <td id="daysWithin1NumCell"></td>
+                <td id="daysWithin1PctCell"></td>
+              </tr>
+    
+              <tr>
+                <td>Within 3% of ATH</td>
+                <td id="daysWithin3NumCell"></td>
+                <td id="daysWithin3PctCell"></td>
+              </tr>     
+    
+              <tr>
+                <td>Within 5% of ATH</td>
+                <td id="daysWithin5NumCell"></td>
+                <td id="daysWithin5PctCell"></td>
+              </tr>   
+              
+              <tr>
+                <td>Within 10% of ATH</td>
+                <td id="daysWithin10NumCell"></td>
+                <td id="daysWithin10PctCell"></td>
+              </tr>   
+    
+              <tr>
+                <td>Within 20% of ATH</td>
+                <td id="daysWithin20NumCell"></td>
+                <td id="daysWithin20PctCell"></td>
+              </tr>   
+    
+              <tr>
+                <td>Within 30% of ATH</td>
+                <td id="daysWithin30NumCell"></td>
+                <td id="daysWithin30PctCell"></td>
+              </tr>   
+    
+              <tr>
+                <td>Within 40% of ATH</td>
+                <td id="daysWithin40NumCell"></td>
+                <td id="daysWithin40PctCell"></td>
+              </tr>   
+    
+              <tr>
+                <td>Within 50% of ATH</td>
+                <td id="daysWithin50NumCell"></td>
+                <td id="daysWithin50PctCell"></td>
+              </tr>   
+    
+              <tr>
+                <td>Within 60% of ATH</td>
+                <td id="daysWithin60NumCell"></td>
+                <td id="daysWithin60PctCell"></td>
+              </tr>   
+    
+              <tr>
+                <td>More than 60% away from ATH</td>
+                <td id="daysMoreThan60NumCell"></td>
+                <td id="daysMoreThan60PctCell"></td>
+              </tr>   
+    
+              <tr>
+                <td>Total</td>
+                <td id="totalDaysNumCell"></td>
+                <td id="totalDaysPctCell"></td>
+              </tr>   
+    
+          </table>
+      </div>
+    -->
+  
+    </div>
+
+</body>
+
+<script src='https://cdnjs.cloudflare.com/ajax/libs/tabletop.js/1.5.1/tabletop.min.js'></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.7.3/dist/Chart.min.js"></script>
+<script src="range-slider-master/js/rSlider.min.js"></script>
+<script src="marketTimingScript.js"></script>
+
+</html>

@@ -154,6 +154,8 @@ var sliderInputMinYear = 1980;
 var sliderInputMaxYear = 2020;
 
 var outputPara1 = document.getElementById("outputPara1");
+var outputPara2 = document.getElementById("outputPara2");
+var outputPara3 = document.getElementById("outputPara3");
 
 var mySlider = new rSlider({
     target: '#yearRangeSlider',
@@ -1172,7 +1174,7 @@ function showOutputs(){
 
             title: {
                 display: true,
-                text: "% Gap to Current All-Time High Price (S&P 500 / VFINX)",
+                text: "S&P 500 % Gap to Current All-Time High Price (VFINX Index Fund)",
                 fontSize: 18,
                 fontColor: "rgb(56,56,56)",
                 padding: 2,
@@ -1662,18 +1664,33 @@ function showTextOutputs(){
     var endingValueP1 = selectedP1NetWorthArray[selectedP1NetWorthArray.length-1];
     var endingValueP2 = selectedP2NetWorthArray[selectedP2NetWorthArray.length-1];
     var netWorthDelta = endingValueP1 - endingValueP2;
+    var netWorthDeltaPercent = endingValueP1 / endingValueP2 - 1;
+
+    var P2endingCashValue = selectedP2CashBalanceArray[selectedP2CashBalanceArray.length-1];
+    var P2endingCashPercent = P2endingCashValue / endingValueP2;
+
+    var P2endingStockValue = selectedP2StockBalanceArray[selectedP2StockBalanceArray.length-1];
+    var P2endingStockPercent = P2endingStockValue / endingValueP2;
+
+    var VFINXEndingPrice = selectedDailyPriceArray[selectedDailyPriceArray.length-1];
+    var VFINXEndingATH = selectedAllTimeHighArray[selectedAllTimeHighArray.length-1];
+    var VFINXEndingGapPercent = (VFINXEndingPrice / VFINXEndingATH - 1) *-1;
+
 
     if(netWorthDelta >= 0){
         outputPara1.innerHTML = "Final portfolio value after "+Math.round(monthsBetweenSelectedDateRange/12*10)/10+" years:"
         +"<ul><li><b>Investing whenever you have cash on hand</b>: your portfolio would be worth <span class=\"highlightText1\">$"+Math.round(endingValueP1).toLocaleString()+"</span></li>"
         +"<li><b>Market timing</b>: your portfolio would be worth <span class=\"highlightText2\">$"+Math.round(endingValueP2).toLocaleString()+"</span></li></ul>"
-        +"In this case, the regular investing investing strategy <span class=\"highlightText3\">outperformed</span> the market timing strategy by <span class=\"highlightText3\">$"+Math.round(netWorthDelta).toLocaleString()+"</span>.";
+        +"In this case, the regular investing strategy <span class=\"highlightText3\">outperformed</span> the market timing strategy by <span class=\"highlightText3\">$"+Math.round(netWorthDelta).toLocaleString()+" (+"+(Math.round(netWorthDeltaPercent*1000)/10)+"%)</span>.";
     } else{
         outputPara1.innerHTML = "Final portfolio value after "+Math.round(monthsBetweenSelectedDateRange/12*10)/10+" years:"
         +"<ul><li><b>Investing whenever you have cash on hand</b>: your portfolio would be worth <span class=\"highlightText1\">$"+Math.round(endingValueP1).toLocaleString()+"</span></li>"
         +"<li><b>Market timing</b>: your portfolio would be worth <span class=\"highlightText2\">$"+Math.round(endingValueP2).toLocaleString()+"</span></li></ul>"
-        +"In this case, the regular investing investing strategy <span class=\"highlightText4\">underperformed</span> the market timing strategy by <span class=\"highlightText4\">$"+Math.round(Math.abs(netWorthDelta)).toLocaleString()+"</span>.";
+        +"In this case, the regular investing strategy <span class=\"highlightText4\">underperformed</span> the market timing strategy by <span class=\"highlightText4\">$"+Math.round(Math.abs(netWorthDelta)).toLocaleString()+" ("+(Math.round(netWorthDeltaPercent*1000)/10)+"%)</span>.";
     }
+
+    outputPara2.innerHTML = "On the last day in the period ("+formatDate(selectedEndDate)+"), in the market timing scenario you would be holding:<ul><li>$"+(Math.round(P2endingStockValue).toLocaleString())+" in stock ("+(Math.round(P2endingStockPercent*1000)/10)+"% of total portfolio)</li><li>$"+(Math.round(P2endingCashValue)).toLocaleString()+" in cash ("+(Math.round(P2endingCashPercent*1000)/10)+"% of portfolio)</li></ul>";
+    outputPara3.innerHTML = "On the last day in the period ("+formatDate(selectedEndDate)+"), the VFINX index had a price of $"+(VFINXEndingPrice).toLocaleString()+", versus a current all-time high price of $"+(VFINXEndingATH).toLocaleString()+" (implying a gap of "+Math.round(VFINXEndingGapPercent*1000)/10+"% to the current all-time high).";
 
 }
 

@@ -13,8 +13,20 @@
 
 <body>
 
-    <h1>Investing Scenarios</h1>
+    <h1>Market Timing vs Regular Investing</h1>
 
+    <p>This Market Timing Simulator allows you to compare the performance of two investing strategies:</p>
+    <ul>
+      <li><b>#1</b>: investing in the stock market in a regular monthly cadence -- regardless of the current market price</li>
+      <li><b>#2</b>: 'timing' the market by keeping your savings in cash and delaying your entries into the stock market until the price is 'low' (for example: 5%, 10%, or 20% below the all-time high price)</li>
+    </ul>
+
+    <p>This tool covers a time period stretching from January 1980 to present, allowing you to test drive your market timing strategy against historic events such as 1987's "Black Monday", the dot-com bubble of the early 2000's, the Great Financial Crisis of 2008, and the COVID-19 pandemic.</p>
+
+    <p>The "stock market" refers to the S&P 500 index in this case (Vanguard's VFINX fund to be precise), a basket of the 500 largest U.S. stocks.</p>
+    
+    <p>Now you're up -- does the route to riches rely on <b>time in</b> the market, or <b>timing</b> the market?</p>
+    &nbsp;
     <div id="loadingImageDiv">
       <img src="https://themeasureofaplan.com/wp-content/uploads/2019/10/copper-loader.gif" alt="Loading animation -- need inputs">
       <p id="loadingPara">Importing market prices...</p>
@@ -77,8 +89,6 @@
 
 
       <div id="advancedInputDiv">
-
-        &nbsp;
   
         <table id="advancedInputTable">
           <tr>
@@ -177,6 +187,8 @@
         &nbsp;
             
         <h2>Market Timing Strategy - Cash vs Stock Breakdown</h2>
+
+        <p id="outputPara2"></p>
     
         <div id="P2CashStockChartDiv" tabindex="0">
           <canvas id="P2CashStockChart"></canvas>
@@ -189,7 +201,9 @@
         &nbsp;
 
         <h2>Underlying Index Performance</h2>
-    
+
+        <p id="outputPara3"></p>
+
         <div id="VFINXPriceChartDiv" tabindex="0">
           <canvas id="VFINXPriceChart"></canvas>
         </div>
@@ -284,6 +298,22 @@
     -->
   
     </div>
+
+    &nbsp;
+    &nbsp;
+
+    <h2>Notes</h2>
+    <ul>
+      <li>Market prices for the S&P 500 index are based on the "Vanguard 500 Index Fund Investor Shares (VFINX)" fund</li>
+      <li>The closing price of the VFINX index fund is updated automatically on a daily basis. As such, this tool will always be up to date for yesterday's closing price</li>
+      <li>It is assumed that dividends are automatically re-invested. For the "regular" investing scenario, the dividends are re-invested on the day that they are received. For the "market timing" scenario, the dividends are re-invested on the next day when the % gap to all-time high threshold is breached</li>
+      <li>All dollar values in this tool are shown on a nominal basis. i.e., there is no adjustment for inflation being considered</li>
+      <li>It is assumed that all transactions are executed at the VFINX index's closing price on the day of the trade</li>
+      <li>The "average annual returns" represent the annualized money-weighted returns (also known as the Internal Rate of Return / IRR)</li>
+      <li>This tool assumes that once money has invested in the market, it is never withdrawn. The market timing mechanics only apply to new savings contributions. In other words, this analysis considers delaying 'buy' transactions, but never executes 'sell' transactions</li>
+    </ul>
+
+    <p>For the spreadsheet junkies: you can download a bare bones excel version of this tool <a href="https://drive.google.com/drive/u/0/folders/1xAj_07y_XwVy8R_BwrV2FISIt4euCnNB" rel="noopener" target="_blank">here</a>. This spreadsheet contains market pricing data up until May 6th, 2020.</p>
 
 </body>
 

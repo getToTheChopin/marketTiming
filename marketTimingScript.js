@@ -3,8 +3,8 @@ var dailyClosePriceArray = [];
 var dailyDividendArray = [];
 
 //Access google sheet spreadsheet using tabletop
-var publicSpreadsheetUrl = "https://docs.google.com/spreadsheets/d/1RGRqoENNsQG4mq9zmttZVphVCzoh9GDgTtin8cg23vk/edit?usp=sharing";
-
+//var publicSpreadsheetUrl = "https://docs.google.com/spreadsheets/d/1RGRqoENNsQG4mq9zmttZVphVCzoh9GDgTtin8cg23vk/edit?usp=sharing";
+var publicSpreadsheetUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSyBTld5USoSfL6cMRWrbJgW7jxQrsP2Qd1bxjBuTaY2WwpFKjiBFRBj2Pd-c4hXqUHRdAOXRnk3jul/pub?output=csv";
 
 var contributionFlagArray = [];
 
@@ -151,7 +151,7 @@ var customURLOutput = document.getElementById("customURLOutput");
 var activeChartFlag = false;
 
 var sliderInputMinYear = 1980;
-var sliderInputMaxYear = 2020;
+var sliderInputMaxYear = 2023;
 
 var outputPara1 = document.getElementById("outputPara1");
 var outputPara2 = document.getElementById("outputPara2");
@@ -159,7 +159,7 @@ var outputPara3 = document.getElementById("outputPara3");
 
 var mySlider = new rSlider({
     target: '#yearRangeSlider',
-    values: {min: 1980, max: 2020},
+    values: {min: sliderInputMinYear, max: sliderInputMaxYear},
     step: 1,
     range: true,
     tooltip: true,
@@ -296,6 +296,7 @@ function getUserInputs(){
     maxSelectedYear = Number(yearRangeSliderValuesArray[1]);
 }
 
+/* table top is now deprecated, using papa parse instead
 function init() {
     Tabletop.init( {
         key: publicSpreadsheetUrl,
@@ -304,18 +305,34 @@ function init() {
         debug:true
     })
 }
+*/
+
+function init() {
+    Papa.parse(publicSpreadsheetUrl, {
+        download: true,
+        header: true,
+        complete: showInfo,
+    });
+}
 
 //Turn JSON from Tabletop into arrays -- generate full arrays
-function showInfo(data, tabletop) {
+function showInfo(results) {
+
+    var data = results.data
 
     //generate full arrays pulled from the master google sheets spreadsheet
     for (i=0;i<data.length;i++) {
+        //dailyDateArray[i] = String(data[i][0]);
         dailyDateArray[i] = String(data[i].Date);
         totalDays = dailyDateArray.length;
 
         dailyClosePriceArray[i] = Number(data[i].VFINX);
         dailyDividendArray[i] = Number(data[i].VFINXDiv);
     }
+
+    console.log(dailyDateArray);
+    console.log(dailyClosePriceArray);
+    console.log(dailyDividendArray);
 
     loadingImageDiv.classList.add("hide");
     mainContainerDiv.classList.remove("hide");
@@ -646,10 +663,8 @@ function showOutputs(){
     /*
     //count frequencies of ATH gaps (% of days within 1% of ATH, 3%, 5%, 10%, etc.)
     numSelectedDays = selectedDateArray.length;
-
     for (i=0; i<numSelectedDays; i++){
         var currentGapToATH = selectedGapToATHArray[i];
-
         if(currentGapToATH == 0){
             countAtATH ++;
         }
@@ -694,42 +709,30 @@ function showOutputs(){
             countMoreThan60Pct ++;
         }
     }
-
     //Fill HTML table showing frequency of days within x% of current all-time high
     
     daysAtATHNumCell.innerHTML = countAtATH.toLocaleString();
     daysAtATHPctCell.innerHTML = Math.round(countAtATH / numSelectedDays * 1000)/10+"%";
-
     daysWithin1NumCell.innerHTML = countWithin1Pct.toLocaleString();
     daysWithin1PctCell.innerHTML = Math.round(countWithin1Pct / numSelectedDays * 1000)/10+"%";
-
     daysWithin3NumCell.innerHTML = countWithin3Pct.toLocaleString();
     daysWithin3PctCell.innerHTML = Math.round(countWithin3Pct / numSelectedDays * 1000)/10+"%";
-
     daysWithin5NumCell.innerHTML = countWithin5Pct.toLocaleString();
     daysWithin5PctCell.innerHTML = Math.round(countWithin5Pct / numSelectedDays * 1000)/10+"%";
-
     daysWithin10NumCell.innerHTML = countWithin10Pct.toLocaleString();
     daysWithin10PctCell.innerHTML = Math.round(countWithin10Pct / numSelectedDays * 1000)/10+"%";
-
     daysWithin20NumCell.innerHTML = countWithin20Pct.toLocaleString();
     daysWithin20PctCell.innerHTML = Math.round(countWithin20Pct / numSelectedDays * 1000)/10+"%";
-
     daysWithin30NumCell.innerHTML = countWithin30Pct.toLocaleString();
     daysWithin30PctCell.innerHTML = Math.round(countWithin30Pct / numSelectedDays * 1000)/10+"%";
-
     daysWithin40NumCell.innerHTML = countWithin40Pct.toLocaleString();
     daysWithin40PctCell.innerHTML = Math.round(countWithin40Pct / numSelectedDays * 1000)/10+"%";
-
     daysWithin50NumCell.innerHTML = countWithin50Pct.toLocaleString();
     daysWithin50PctCell.innerHTML = Math.round(countWithin50Pct / numSelectedDays * 1000)/10+"%";
-
     daysWithin60NumCell.innerHTML = countWithin60Pct.toLocaleString();
     daysWithin60PctCell.innerHTML = Math.round(countWithin60Pct / numSelectedDays * 1000)/10+"%";
-
     daysMoreThan60NumCell.innerHTML = countMoreThan60Pct.toLocaleString();
     daysMoreThan60PctCell.innerHTML = Math.round(countMoreThan60Pct / numSelectedDays * 1000)/10+"%";
-
     totalDaysNumCell.innerHTML = numSelectedDays.toLocaleString();
     totalDaysPctCell.innerHTML = "100%";
     */
@@ -1701,6 +1704,8 @@ function convertObjectToDate(dateObject){
     var dateValue;
 
     var dateString = String(dateObject);
+    console.log(dateObject)
+    console.log(dateString)
     
     var year = dateString.substring(dateString.length-4,dateString.length);
     var month = dateString.substring(0,2);
@@ -1887,4 +1892,3 @@ function copyToClipboard(containerid) {
         return;
     }
 }
-
